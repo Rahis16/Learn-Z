@@ -201,7 +201,7 @@ export default function Navbar() {
         </div>
 
         {/* Nav */}
-        <nav className="p-4 space-y-2">
+        <nav className="p-4 space-y-2 overflow-y-auto h-full pb-44">
           <Link
             href="/dashboard"
             onClick={toggleSidebar}
@@ -284,14 +284,14 @@ export default function Navbar() {
             </span>
           </Link>
           <Link
-            href="/find-buddy"
+            href="/Community"
             onClick={toggleSidebar}
             className="flex items-center space-x-3 px-3 py-2 rounded-xl bg-white/60 dark:bg-zinc-900/60 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/80 transition shadow-sm"
           >
             <div
               className={cn(
                 "w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200",
-                pathname === "/find-buddy"
+                pathname === "/Community"
                   ? "bg-indigo-500 text-white scale-105 shadow"
                   : "bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-indigo-600 hover:scale-110"
               )}
@@ -301,40 +301,15 @@ export default function Navbar() {
             <span
               className={cn(
                 "transition-colors duration-200",
-                pathname === "/find-buddy"
+                pathname === "/Community"
                   ? "text-indigo-500"
                   : "text-gray-700 hover:text-indigo-600"
               )}
             >
-              Find Buddy
+              Community
             </span>
           </Link>
-          <Link
-            href="/group"
-            onClick={toggleSidebar}
-            className="flex items-center space-x-3 px-3 py-2 rounded-xl bg-white/60 dark:bg-zinc-900/60 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/80 transition shadow-sm"
-          >
-            <div
-              className={cn(
-                "w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200",
-                pathname === "/group"
-                  ? "bg-indigo-500 text-white scale-105 shadow"
-                  : "bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-indigo-600 hover:scale-110"
-              )}
-            >
-              <UsersRound className="text-xl" />
-            </div>
-            <span
-              className={cn(
-                "transition-colors duration-200",
-                pathname === "/group"
-                  ? "text-indigo-500"
-                  : "text-gray-700 hover:text-indigo-600"
-              )}
-            >
-              Group
-            </span>
-          </Link>
+          
           <Link
             href="/classroom"
             onClick={toggleSidebar}
