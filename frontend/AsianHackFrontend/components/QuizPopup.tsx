@@ -14,47 +14,48 @@ type Quiz = {
 
 interface EnhancedQuizModalProps {
   quiz: Quiz | null; // `Quiz` type from your types
+  handleClose: () => void;
 }
 
-const EnhancedQuizModal = ({ quiz }: EnhancedQuizModalProps) => {
+const EnhancedQuizModal = ({ quiz, handleClose }: EnhancedQuizModalProps) => {
   // Sample quiz data based on your structure
-//   const sampleQuiz: Quiz = {
-//     quiz: [
-//       {
-//         question: "Which of the following is NOT mentioned as a key component of HTML structure?",
-//         options: ['<!DOCTYPE html>', '<html>', '<head>', '<style>'],
-//         correct_answer: "<style>",
-//         explanation: "The video mentions <!DOCTYPE html>, <html>, <head>, and <body> as key HTML components, but not <style>."
-//       },
-//       {
-//         question: "What is the purpose of the tutorial?",
-//         options: ['To teach advanced web development', 'To guide beginners through building their first HTML website', 'To explain the server-side programming', 'To demonstrate advanced CSS techniques'],
-//         correct_answer: "To guide beginners through building their first HTML website",
-//         explanation: "The video states it's for absolute beginners learning to build their first HTML website."
-//       },
-//       {
-//         question: "What is VS Code?",
-//         options: ['A web server', 'A programming language', 'A code editor', 'A version control system'],
-//         correct_answer: "A code editor",
-//         explanation: "VS Code is mentioned as an installation for setting up the development environment, and it is a code editor."
-//       },
-//       {
-//         question: "What is the client-server model compared to in the video?",
-//         options: ['A car', 'An iPhone', 'A computer', 'A book'],
-//         correct_answer: "An iPhone",
-//         explanation: "The client-server model is explained through relatable analogies like using an iPhone."
-//       },
-//       {
-//         question: "Which of the following is NOT a topic covered in the tutorial?",
-//         options: ['HTML basics', 'CSS styling', 'Advanced JavaScript frameworks', 'Web development setup'],
-//         correct_answer: "Advanced JavaScript frameworks",
-//         explanation: "The tutorial focuses on beginner topics and does not cover advanced frameworks."
-//       }
-//     ]
-//   };
+  //   const sampleQuiz: Quiz = {
+  //     quiz: [
+  //       {
+  //         question: "Which of the following is NOT mentioned as a key component of HTML structure?",
+  //         options: ['<!DOCTYPE html>', '<html>', '<head>', '<style>'],
+  //         correct_answer: "<style>",
+  //         explanation: "The video mentions <!DOCTYPE html>, <html>, <head>, and <body> as key HTML components, but not <style>."
+  //       },
+  //       {
+  //         question: "What is the purpose of the tutorial?",
+  //         options: ['To teach advanced web development', 'To guide beginners through building their first HTML website', 'To explain the server-side programming', 'To demonstrate advanced CSS techniques'],
+  //         correct_answer: "To guide beginners through building their first HTML website",
+  //         explanation: "The video states it's for absolute beginners learning to build their first HTML website."
+  //       },
+  //       {
+  //         question: "What is VS Code?",
+  //         options: ['A web server', 'A programming language', 'A code editor', 'A version control system'],
+  //         correct_answer: "A code editor",
+  //         explanation: "VS Code is mentioned as an installation for setting up the development environment, and it is a code editor."
+  //       },
+  //       {
+  //         question: "What is the client-server model compared to in the video?",
+  //         options: ['A car', 'An iPhone', 'A computer', 'A book'],
+  //         correct_answer: "An iPhone",
+  //         explanation: "The client-server model is explained through relatable analogies like using an iPhone."
+  //       },
+  //       {
+  //         question: "Which of the following is NOT a topic covered in the tutorial?",
+  //         options: ['HTML basics', 'CSS styling', 'Advanced JavaScript frameworks', 'Web development setup'],
+  //         correct_answer: "Advanced JavaScript frameworks",
+  //         explanation: "The tutorial focuses on beginner topics and does not cover advanced frameworks."
+  //       }
+  //     ]
+  //   };
 
   // Quiz states
-//   const [quiz] = useState<Quiz>(sampleQuiz);
+  //   const [quiz] = useState<Quiz>(sampleQuiz);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [showQuizModal, setShowQuizModal] = useState(true);
   const [userAnswers, setUserAnswers] = useState<string[]>([]);
@@ -68,7 +69,7 @@ const EnhancedQuizModal = ({ quiz }: EnhancedQuizModalProps) => {
   // Timer effect
   useEffect(() => {
     if (!timerEnabled || quizFinished || showExplanation) return;
-    
+
     if (timeLeft > 0) {
       const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timer);
@@ -87,7 +88,7 @@ const EnhancedQuizModal = ({ quiz }: EnhancedQuizModalProps) => {
     setSelectedAnswer(answer);
     setUserAnswers(prev => [...prev, answer]);
     setShowExplanation(true);
-    
+
     // Calculate score
     if (answer === quiz.quiz[currentQuestionIndex].correct_answer) {
       setScore(prev => prev + 1);
@@ -122,7 +123,7 @@ const EnhancedQuizModal = ({ quiz }: EnhancedQuizModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-black/40 bg-opacity-60 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {!quizFinished ? (
           <>
             {/* Header */}
@@ -136,7 +137,7 @@ const EnhancedQuizModal = ({ quiz }: EnhancedQuizModalProps) => {
                   </div>
                 )}
               </div>
-              
+
               {/* Progress bar */}
               <div className="mb-2">
                 <div className="flex justify-between text-sm mb-2">
@@ -144,25 +145,24 @@ const EnhancedQuizModal = ({ quiz }: EnhancedQuizModalProps) => {
                   <span>{Math.round(((currentQuestionIndex + 1) / quiz.quiz.length) * 100)}%</span>
                 </div>
                 <div className="w-full bg-white bg-opacity-20 rounded-full h-3">
-                  <div 
+                  <div
                     className="bg-white h-3 rounded-full transition-all duration-300 ease-out"
                     style={{ width: `${((currentQuestionIndex + 1) / quiz.quiz.length) * 100}%` }}
                   />
                 </div>
               </div>
-              
+
               {/* Progress dots */}
               <div className="flex justify-center space-x-2 mt-4">
                 {quiz.quiz.map((_, index) => (
                   <div
                     key={index}
-                    className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                      index < currentQuestionIndex 
-                        ? 'bg-green-400' 
-                        : index === currentQuestionIndex 
-                        ? 'bg-white' 
-                        : 'bg-white bg-opacity-30'
-                    }`}
+                    className={`w-3 h-3 rounded-full transition-all duration-200 ${index < currentQuestionIndex
+                        ? 'bg-green-400'
+                        : index === currentQuestionIndex
+                          ? 'bg-white'
+                          : 'bg-white bg-opacity-30'
+                      }`}
                   />
                 ))}
               </div>
@@ -180,7 +180,7 @@ const EnhancedQuizModal = ({ quiz }: EnhancedQuizModalProps) => {
               <div className="space-y-3 mb-6">
                 {quiz.quiz[currentQuestionIndex].options.map((option, idx) => {
                   let buttonClass = "w-full text-left p-4 rounded-xl border-2 transition-all duration-200 font-medium ";
-                  
+
                   if (showExplanation) {
                     if (option === quiz.quiz[currentQuestionIndex].correct_answer) {
                       buttonClass += "bg-green-50 border-green-500 text-green-800";
@@ -232,17 +232,27 @@ const EnhancedQuizModal = ({ quiz }: EnhancedQuizModalProps) => {
                 </div>
               )}
 
-              {/* Next Button */}
-              {showExplanation && (
-                <div className="flex justify-end">
-                  <button
-                    onClick={handleNext}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-                  >
-                    {currentQuestionIndex + 1 === quiz.quiz.length ? 'Finish Quiz' : 'Next Question'}
-                  </button>
-                </div>
-              )}
+
+              <div className='flex items-center justify-between'>
+                <button
+                  onClick={handleClose}
+                  className="px-6 py-3 bg-red-500 text-white rounded-lg font-semibold shadow-lg hover:shadow-xl cursor-pointer"
+                >
+                Close
+                </button>
+
+                {/* Next Button */}
+                {showExplanation && (
+                  <div className="flex justify-end">
+                    <button
+                      onClick={handleNext}
+                      className="cursor-pointer px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    >
+                      {currentQuestionIndex + 1 === quiz.quiz.length ? 'Finish Quiz' : 'Next Question'}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </>
         ) : (
@@ -323,13 +333,11 @@ const EnhancedQuizModal = ({ quiz }: EnhancedQuizModalProps) => {
               <label className="text-sm text-gray-600">Timer enabled:</label>
               <button
                 onClick={() => setTimerEnabled(!timerEnabled)}
-                className={`w-12 h-6 rounded-full transition-colors ${
-                  timerEnabled ? 'bg-blue-500' : 'bg-gray-300'
-                } relative`}
+                className={`w-12 h-6 rounded-full transition-colors ${timerEnabled ? 'bg-blue-500' : 'bg-gray-300'
+                  } relative`}
               >
-                <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
-                  timerEnabled ? 'translate-x-7' : 'translate-x-1'
-                }`} />
+                <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${timerEnabled ? 'translate-x-7' : 'translate-x-1'
+                  }`} />
               </button>
             </div>
           </div>

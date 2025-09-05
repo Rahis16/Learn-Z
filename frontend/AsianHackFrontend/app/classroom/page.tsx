@@ -308,6 +308,10 @@ const TeachingChatUI: React.FC = () => {
     );
   };
 
+  const handleClose = ()=>{
+    setShowQuizModal(false);
+  }
+
   // Fetch classroom on mount & set the current video
   useEffect(() => {
     let cancelled = false;
@@ -1303,7 +1307,7 @@ const TeachingChatUI: React.FC = () => {
         }
       `}</style>
 
-      {showQuizModal && quiz && <EnhancedQuizModal quiz={quiz} />}
+      {showQuizModal && quiz && <EnhancedQuizModal quiz={quiz} handleClose={handleClose}/>}
 
       {/* {showQuizModal && quiz && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
