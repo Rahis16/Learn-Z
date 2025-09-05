@@ -11,8 +11,6 @@ import {
   GraduationCap,
   Trophy,
   Brain,
-  Target,
-  MessageSquare,
   FileText,
   Menu,
   X,
@@ -23,6 +21,9 @@ import Course from "@/adminComponents/Course";
 import StudentProgress from "@/adminComponents/StudentProgress";
 import AdminInstructorsPage from "@/adminComponents/InstructorContent";
 import AdminAnalyticsPage from "@/adminComponents/Analytics";
+import { FcFeedback } from "react-icons/fc";
+import AchievementsPage from "@/adminComponents/Achievements";
+import FeedbackPage from "@/adminComponents/Feedback";
 
 // Media Query Hook
 function useMediaQuery(query: string): boolean {
@@ -101,14 +102,9 @@ export default function AdminPage() {
       key: "achievements",
     },
     {
-      label: "Assessments",
-      icon: <Target size={18} />,
-      key: "assessments",
-    },
-    {
-      label: "Messages",
-      icon: <MessageSquare size={18} />,
-      key: "messages",
+      label: "Feedback",
+      icon: <FcFeedback size={18} />,
+      key: "feedback",
       badge: 7,
     },
     {
@@ -117,18 +113,13 @@ export default function AdminPage() {
       key: "reports",
     },
     {
-      label: "Users",
-      icon: <Users size={18} />,
-      key: "users",
-    },
-    {
       label: "Settings",
       icon: <Settings size={18} />,
       key: "settings",
     },
   ];
-
-  // Get the active nav item
+  
+    // Get the active nav item
   const activeNavItem = navItems.find((item) => item.key === activePage);
 
   const handleTouchStart = (e: TouchEvent) =>
@@ -171,9 +162,13 @@ export default function AdminPage() {
       case "students":
         return <StudentProgress />;
       case "instructors":
-        return <AdminInstructorsPage/>;
+        return <AdminInstructorsPage />;
       case "analytics":
-        return <AdminAnalyticsPage/>;
+        return <AdminAnalyticsPage />;
+      case "achievements":
+        return <AchievementsPage />;
+      case "feedback":
+        return <FeedbackPage />;
       default:
         return (
           <div className="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/30 shadow-xl p-8">

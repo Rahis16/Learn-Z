@@ -125,7 +125,7 @@ export default function AdminAnalyticsPage() {
 
   // Recent activities (dummy)
   const RECENT = [
-    { time: "2m ago", text: "Aarav purchased Advanced React Patterns (USD 39)" },
+    { time: "2m ago", text: "Aarav purchased Advanced React Patterns (Rs 399)" },
     { time: "1h ago", text: "Prisha uploaded new premium course: Deep Learning for Vision" },
     { time: "3h ago", text: "Kiran upgraded to Pro" },
     { time: "6h ago", text: "Asmita's course reached 1,000 learners" },
@@ -152,7 +152,7 @@ export default function AdminAnalyticsPage() {
 
       {/* KPI Row */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard icon={<DollarSign className="w-4 h-4" />} label="Revenue (12m)" value={`$${KPIs.totalRevenue.toLocaleString()}`} sub="Gross revenue" />
+        <StatCard label="Revenue (12m)" value={`Rs ${KPIs.totalRevenue.toLocaleString()}`} sub="Gross revenue" />
         <StatCard icon={<Users className="w-4 h-4" />} label="Students" value={String(KPIs.students)} sub="Total users" />
         <StatCard icon={<BookOpen className="w-4 h-4" />} label="Courses" value={String(KPIs.courses)} sub={`${KPIs.premium} premium • ${KPIs.freemium} freemium`} />
         <StatCard icon={<Clock className="w-4 h-4" />} label="Purchases" value={String(KPIs.totalPurchases)} sub={`${KPIs.totalSignups} signups`} />
@@ -162,7 +162,7 @@ export default function AdminAnalyticsPage() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 grid gap-6 lg:grid-cols-3">
         <motion.section variants={card} initial="hidden" animate="show" className="rounded-3xl border border-white/30 dark:border-white/10 bg-white/60 dark:bg-zinc-900/60 p-6 lg:col-span-2">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold flex items-center gap-2"><LineIcon className="w-5 h-5" /> Revenue (USD x1k)</h3>
+            <h3 className="text-lg font-semibold flex items-center gap-2"><LineIcon className="w-5 h-5" /> Revenue (Rs x1k)</h3>
             <div className="inline-flex items-center gap-2">
               <button onClick={() => setRange("30d")} className={`text-xs px-2 py-1 rounded-xl ${range === "30d" ? "bg-indigo-500 text-white" : "bg-white/60 dark:bg-zinc-900/60"}`}>30d</button>
               <button onClick={() => setRange("90d")} className={`text-xs px-2 py-1 rounded-xl ${range === "90d" ? "bg-indigo-500 text-white" : "bg-white/60 dark:bg-zinc-900/60"}`}>90d</button>
@@ -175,7 +175,7 @@ export default function AdminAnalyticsPage() {
                 <CartesianGrid strokeDasharray="3 3" opacity={0.25} />
                 <XAxis dataKey="month" />
                 <YAxis />
-                <Tooltip formatter={(v: number) => `$${v}k`} />
+                <Tooltip formatter={(v: number) => `Rs ${v}k`} />
                 <Legend />
                 <Line type="monotone" dataKey="revenue" stroke="#6366F1" strokeWidth={3} dot={{ r: 3 }} />
               </LineChart>
@@ -219,7 +219,7 @@ export default function AdminAnalyticsPage() {
                     <div className="font-medium">{c.title}</div>
                     <div className="text-xs text-zinc-500">{c.purchases.toLocaleString()} purchases</div>
                   </div>
-                  <div className="w-36 text-right">${c.revenue.toLocaleString()}</div>
+                  <div className="w-36 text-right">Rs {c.revenue.toLocaleString()}</div>
                 </div>
               ))}
             </div>
@@ -230,7 +230,7 @@ export default function AdminAnalyticsPage() {
                   <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
                   <XAxis type="number" />
                   <YAxis dataKey="title" type="category" width={160} />
-                  <Tooltip formatter={(v: number) => `$${v.toLocaleString()}`} />
+                  <Tooltip formatter={(v: number) => `Rs ${v.toLocaleString()}`} />
                   <Bar dataKey="revenue" fill="#8B5CF6" radius={[6, 6, 6, 6]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -253,11 +253,11 @@ export default function AdminAnalyticsPage() {
 }
 
 /* ---------------- Small components ---------------- */
-function StatCard({ icon, label, value, sub }: { icon?: React.ReactNode; label: string; value: string; sub?: string }) {
+function StatCard({ label, value, sub }: { icon?: React.ReactNode; label: string; value: string; sub?: string }) {
   return (
     <div className="relative overflow-hidden rounded-2xl p-4 border border-white/30 dark:border-white/10 bg-white/50 dark:bg-zinc-900/50">
       <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-gradient-to-tr from-indigo-500/20 via-violet-500/20 to-sky-500/20 blur-2xl" />
-      <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">{icon}<span>{label}</span></div>
+      <div className="flex items-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">Rs.<span>{label}</span></div>
       <p className="text-2xl font-semibold mt-1">{value}</p>
       {sub && <p className="text-xs text-zinc-500 mt-1">{sub}</p>}
     </div>

@@ -260,7 +260,7 @@ export default function AdminInstructorsPage() {
                 <CartesianGrid strokeDasharray="3 3" opacity={0.25} />
                 <XAxis dataKey="name" />
                 <YAxis />
-                <Tooltip formatter={(v: number) => `$${v.toLocaleString()}`} />
+                <Tooltip formatter={(v: number) => `Rs${v.toLocaleString()}`} />
                 <Bar dataKey="revenue" fill="#6366F1" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -320,8 +320,8 @@ export default function AdminInstructorsPage() {
                       </td>
                       <td className="py-2 pr-3">{totalCourses}</td>
                       <td className="py-2 pr-3">{learners.toLocaleString()}</td>
-                      <td className="py-2 pr-3">${revenue.toLocaleString()}</td>
-                      <td className="py-2 pr-3">${instructorShare.toLocaleString()}</td>
+                      <td className="py-2 pr-3">Rs{revenue.toLocaleString()}</td>
+                      <td className="py-2 pr-3">Rs{instructorShare.toLocaleString()}</td>
                       <td className="py-2 pr-3">
                         {ins.status === "Active" ? (
                           <span className="text-[11px] px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-600 border border-emerald-500/20">Active</span>
