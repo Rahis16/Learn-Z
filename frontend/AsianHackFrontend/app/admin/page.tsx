@@ -21,6 +21,8 @@ import Image from "next/image";
 import Dashboard from "@/adminComponents/Dashboard";
 import Course from "@/adminComponents/Course";
 import StudentProgress from "@/adminComponents/StudentProgress";
+import AdminInstructorsPage from "@/adminComponents/InstructorContent";
+import AdminAnalyticsPage from "@/adminComponents/Analytics";
 
 // Media Query Hook
 function useMediaQuery(query: string): boolean {
@@ -169,9 +171,9 @@ export default function AdminPage() {
       case "students":
         return <StudentProgress />;
       case "instructors":
-        return <InstructorsContent />;
+        return <AdminInstructorsPage/>;
       case "analytics":
-        return <AnalyticsContent />;
+        return <AdminAnalyticsPage/>;
       default:
         return (
           <div className="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/30 shadow-xl p-8">
