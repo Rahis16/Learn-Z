@@ -389,7 +389,7 @@ export default function Navbar() {
                   : "text-gray-700 hover:text-indigo-500"
               )}
             >
-              Youtube Courses
+              LearnTube
             </span>
           </Link>
           <Link
