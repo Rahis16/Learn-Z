@@ -62,10 +62,6 @@ def transcribe_and_reply_2(request):
                   Always stay friendly, engaging, and supportive — like a buddy guiding learners through the video journey.
                 """
 
-    composed_system_prompts = (
-        f"{system_prompt} [ The current video context: {videoContext} ]"
-    )
-
     # audio_file = request.FILES['audio']
 
     # # Save temporarily
@@ -91,6 +87,14 @@ def transcribe_and_reply_2(request):
     previous_messages = ChatMessageAi.objects.order_by("-created_at")
     previous_messages = list(reversed(previous_messages))
 
+    conversation_history = [
+        {"role": msg.role, "content": msg.content} for msg in previous_messages
+    ]
+
+    composed_system_prompts = (
+        f"[your role]: [{system_prompt}] [current video context]: [ {videoContext} ] with [conversation history]: [{conversation_history}]"
+    )
+
     # Build Gemini history
     gemini_contents = []
 
@@ -100,14 +104,14 @@ def transcribe_and_reply_2(request):
     )
 
     # Add conversation history
-    for msg in previous_messages:
-        gemini_contents.append(
-            {
-                "role": "user" if msg.role == "user" else "model",
-                "parts": [{"text": msg.content}],
-            }
-        )
-        # print(msg)
+    # for msg in previous_messages:
+    #     gemini_contents.append(
+    #         {
+    #             "role": "user" if msg.role == "user" else "model",
+    #             "parts": [{"text": msg.content}],
+    #         }
+    #     )
+    #     # print(msg)
 
     # Add current message
     gemini_contents.append({"role": "user", "parts": [{"text": message}]})
