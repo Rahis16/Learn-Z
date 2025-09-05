@@ -24,6 +24,8 @@ import AdminAnalyticsPage from "@/adminComponents/Analytics";
 import { FcFeedback } from "react-icons/fc";
 import AchievementsPage from "@/adminComponents/Achievements";
 import FeedbackPage from "@/adminComponents/Feedback";
+import ReportsPage from "@/adminComponents/Report"
+import AdminSettingsPage from "@/adminComponents/Setting";
 
 // Media Query Hook
 function useMediaQuery(query: string): boolean {
@@ -169,6 +171,10 @@ export default function AdminPage() {
         return <AchievementsPage />;
       case "feedback":
         return <FeedbackPage />;
+      case "reports":
+        return <ReportsPage />;
+      case "settings":
+        return <AdminSettingsPage />;
       default:
         return (
           <div className="bg-white/60 backdrop-blur-xl rounded-3xl border border-white/30 shadow-xl p-8">
