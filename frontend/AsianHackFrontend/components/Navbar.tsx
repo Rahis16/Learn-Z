@@ -25,22 +25,21 @@ import {
   HiOutlineLogout,
   HiOutlineShieldCheck, // Optional for admin panel icon
 } from "react-icons/hi";
-import Logo from "./LogoSwitcher";
 import {
+  Users,
+  BrainCircuit,
+  PlaySquare,
+  Crown,
+  Trophy,
   Bell,
   CalendarDays,
-  GraduationCap,
   Handshake,
   LayoutDashboard,
-  Moon,
   School,
-  Search,
-  Sparkles,
-  Sun,
-  UsersRound,
-  Crown,
-  Youtube
+  Youtube,
 } from "lucide-react";
+import Logo from "./LogoSwitcher";
+
 import Image from "next/image";
 
 const navLinks = [
@@ -79,50 +78,78 @@ export default function Navbar() {
   return (
     <>
       {/* Top Nav */}
-      <header className="py-4 sticky top-0 z-40 backdrop-blur-xl bg-white/40 dark:bg-zinc-950/40 border-b border-white/20 dark:border-white/10 shadow-[0_20px_120px_rgba(99,102,241,0.35)]
-">
+      <header className="py-4 sticky top-0 z-40 backdrop-blur-xl bg-white/40 dark:bg-zinc-950/40 border-b border-white/20 dark:border-white/10 shadow-[0_20px_120px_rgba(99,102,241,0.35)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center gap-6">
-          <Image onClick={() => router.push("/")}
+          <Image
+            onClick={() => router.push("/")}
             src="/icons/logo12.png"
             alt="Learn-Z"
             width={130}
             height={130}
+            className="cursor-pointer"
           />
 
-          {/* Search */}
+          {/* Primary Nav (replaces Search) */}
           <div className="flex-1 hidden md:flex">
-            <label className="w-full">
-              <div className="group relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
-                <input
-                  aria-label="Search"
-                  // value={query}
-                  // onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search courses, files, people…"
-                  className="w-full rounded-2xl pl-9 pr-4 py-2 bg-white/60 dark:bg-zinc-900/60 border border-white/30 dark:border-white/10 outline-none focus:ring-2 ring-indigo-400/60 shadow-sm"
-                />
-              </div>
-            </label>
+            <nav
+              aria-label="Primary"
+              className="w-full rounded-2xl justify-around bg-white/60 dark:bg-zinc-900/60 border border-white/30 dark:border-white/10 shadow-sm px-1 py-1 flex items-center gap-1"
+            >
+              <button
+                onClick={() => router.push("/community")}
+                className="group cursor-pointer inline-flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/80 dark:hover:bg-zinc-900/80 transition"
+                title="Community"
+              >
+                <Users className="w-4 h-4 text-zinc-500 group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-zinc-200" />
+                <span className="text-sm">Community</span>
+              </button>
+
+              <button
+                onClick={() => router.push("/classroom")}
+                className="group cursor-pointer inline-flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/80 dark:hover:bg-zinc-900/80 transition"
+                title="AI Classroom"
+              >
+                <BrainCircuit className="w-4 h-4 text-zinc-500 group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-zinc-200" />
+                <span className="text-sm">AI Classroom</span>
+              </button>
+
+              <button
+                onClick={() => router.push("/freecourses")}
+                className="group cursor-pointer inline-flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/80 dark:hover:bg-zinc-900/80 transition"
+                title="LearnTube"
+              >
+                <PlaySquare className="w-4 h-4 text-zinc-500 group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-zinc-200" />
+                <span className="text-sm">LearnTube</span>
+              </button>
+
+              <button
+                onClick={() => router.push("/premiumcourses")}
+                className="group cursor-pointer inline-flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/80 dark:hover:bg-zinc-900/80 transition"
+                title="Premium Courses"
+              >
+                <Crown className="w-4 h-4 text-zinc-500 group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-zinc-200" />
+                <span className="text-sm">Premium Courses</span>
+              </button>
+            </nav>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-6  ml-auto">
+          <div className="flex items-center gap-6 ml-auto">
+            {/* Quiz (replaces Quick Actions) */}
             <button
-              // onClick={() => setPaletteOpen(true)}
-              className="hidden md:inline-flex items-center gap-1 rounded-xl px-3 py-2 bg-white/60 dark:bg-zinc-900/60 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/80 transition shadow-sm"
-              aria-label="Open Command Palette"
+              onClick={() => router.push("/quiz")}
+              className="hidden cursor-pointer md:inline-flex items-center gap-1 rounded-xl px-3 py-2 bg-white/60 dark:bg-zinc-900/60 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/80 transition shadow-sm"
+              aria-label="Open Quiz"
             >
-              <Sparkles className="w-4 h-4" />
-              <span className="hidden sm:inline">Quick Actions</span>
+              <Trophy className="w-4 h-4" />
+              <span className="hidden sm:inline">Quiz</span>
             </button>
-
-            {/* <ThemeToggle /> */}
 
             <button
               onClick={() => {
                 router.push("/notification");
               }}
-              className="relative rounded-xl p-2 bg-white/60 dark:bg-zinc-900/60 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/80 transition shadow-sm"
+              className="relative rounded-xl cursor-pointer p-2 bg-white/60 dark:bg-zinc-900/60 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/80 transition shadow-sm"
               aria-label="Notifications"
             >
               <Bell className="w-4 h-4" />
@@ -131,7 +158,7 @@ export default function Navbar() {
 
             {user ? (
               <button
-                className="flex items-center gap-2 rounded-2xl pl-2 pr-4 py-1 bg-white/60 dark:bg-zinc-900/60 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/80 transition shadow-sm"
+                className="cursor-pointer flex items-center gap-2 rounded-2xl pl-2 pr-4 py-1 bg-white/60 dark:bg-zinc-900/60 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/80 transition shadow-sm"
                 aria-label="Open profile"
                 onClick={toggleSidebar}
               >
@@ -186,7 +213,8 @@ export default function Navbar() {
       >
         {/* Header */}
         <div className="flex justify-between items-center px-4 py-2 border-b border-white/20 dark:border-white/10">
-          <Image onClick={() => router.push("/")}
+          <Image
+            onClick={() => router.push("/")}
             src="/icons/logo12.png"
             alt="Learn-Z"
             width={130}
@@ -201,7 +229,7 @@ export default function Navbar() {
         </div>
 
         {/* Nav */}
-        <nav className="p-4 space-y-2 overflow-y-auto h-full pb-44">
+        <nav className="p-4 overflow-y-auto h-full pb-44 space-y-2">
           <Link
             href="/dashboard"
             onClick={toggleSidebar}
@@ -283,8 +311,9 @@ export default function Navbar() {
               Events
             </span>
           </Link>
+
           <Link
-            href="/Community"
+            href="/community"
             onClick={toggleSidebar}
             className="flex items-center space-x-3 px-3 py-2 rounded-xl bg-white/60 dark:bg-zinc-900/60 border border-white/20 dark:border-white/10 hover:bg-white/80 dark:hover:bg-zinc-900/80 transition shadow-sm"
           >
@@ -309,7 +338,7 @@ export default function Navbar() {
               Community
             </span>
           </Link>
-          
+
           <Link
             href="/classroom"
             onClick={toggleSidebar}
