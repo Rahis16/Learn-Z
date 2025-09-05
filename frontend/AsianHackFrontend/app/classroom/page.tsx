@@ -44,7 +44,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { get } from "http";
+import QuizPopup from "@/components/QuizPopup";
+import EnhancedQuizModal from "@/components/QuizPopup";
 
 // classroom API shapes
 type ClassroomVideo = {
@@ -65,6 +66,13 @@ type ClassroomItem = {
   progress_seconds: number;
   completed: boolean;
   last_watched_at: string | null;
+};
+
+type QuizQuestion = {
+  question: string;
+  options: string[];
+  correct_answer: string;
+  explanation: string;
 };
 
 type ClassroomResp = {
@@ -146,6 +154,8 @@ const TeachingChatUI: React.FC = () => {
   const [expanded, setExpanded] = useState(false);
   const [playing, setPlaying] = useState(false);
 
+  const [quiz, setQuiz] = useState<QuizQuestion[] | null>(null);
+
   // Credits (demo: you can wire these to real usage)
   const [inputCredits, setInputCredits] = useState(8000);
   const [outputCredits, setOutputCredits] = useState(4200);
@@ -171,9 +181,61 @@ const TeachingChatUI: React.FC = () => {
   const recorder = new VoiceRecorder();
   const [isRecording, setIsRecording] = useState(false);
 
+  // / Quiz popup states
+  // const [quizData, setQuizData] = useState<any | null>(null);
+  // const [showQuizPopup, setShowQuizPopup] = useState(false);
+
+  // const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [showQuizModal, setShowQuizModal] = useState(false);
+  // const [userAnswers, setUserAnswers] = useState<string[]>([]);
+  // const [quizFinished, setQuizFinished] = useState(false);
+
+  // const handleAnswer = (answer: string) => {
+  //   setUserAnswers((prev) => [...prev, answer]);
+
+  //   if (quiz && currentQuestionIndex + 1 < quiz.quiz.length) {
+  //     setCurrentQuestionIndex((prev) => prev + 1);
+  //   } else {
+  //     setQuizFinished(true);
+  //   }
+  // };
+
   const router = useRouter();
 
+  useEffect(() => {
+    if (quiz && quiz.quiz.length > 0) {
+      setShowQuizModal(true);
+    }
+  }, [quiz]);
+
+  // function parseAIQuiz(aiResponse: any) {
+  //   if (!aiResponse?.ai_quiz) return null;
+
+  //   let raw = aiResponse.ai_quiz;
+
+  //   try {
+  //     // Remove ```json or ``` fences if present
+  //     raw = raw
+  //       .replace(/```json/i, "")
+  //       .replace(/```/g, "")
+  //       .trim();
+
+  //     // Remove escaped newlines
+  //     raw = raw.replace(/\\n/g, "");
+
+  //     // Parse JSON
+  //     const data = JSON.parse(raw);
+  //     if (data.quiz && Array.isArray(data.quiz)) return data;
+
+  //     return null;
+  //   } catch (err) {
+  //     console.error("Failed to parse AI quiz:", err);
+  //     return null;
+  //   }
+  // }
+
   // classroom state
+
   const [loadingClassroom, setLoadingClassroom] = useState(false);
   const [classroomItems, setClassroomItems] = useState<ClassroomItem[]>([]);
   const [activeVideo, setActiveVideo] = useState<ClassroomVideo | null>(null);
@@ -381,9 +443,48 @@ const TeachingChatUI: React.FC = () => {
     const videoContext = activeVideo?.notes?.trim() || "";
 
     try {
-      const res = await sendToBackend(undefined, composed, undefined, videoContext);
+      const res = await sendToBackend(
+        undefined,
+        composed,
+        undefined,
+        videoContext
+      );
       const aiText = res.ai_text || "Sorry, I couldn't process that.";
       const audio = new Audio(`data:audio/mpeg;base64,${res.ai_audio}`);
+      setQuiz(res.ai_quiz || null);
+      console.log("Received quiz data:", res.ai_quiz);
+
+      let parsedQuiz: { quiz: any[] } | null = null;
+
+      if (res.ai_quiz) {
+        if (typeof res.ai_quiz === "string") {
+          try {
+            // Remove all ```json or ``` wrappers, trim whitespace/newlines
+            const cleaned = res.ai_quiz //doubt---------------
+              .replace(/```json/g, "") // remove any ```json
+              .replace(/```/g, "") // remove any ```
+              .trim();
+
+            // Sometimes the backend wraps JSON in extra quotes accidentally
+            const withoutExtraQuotes = cleaned.replace(/^"+|"+$/g, "");
+
+            parsedQuiz = JSON.parse(withoutExtraQuotes);
+          } catch (err) {
+            console.error(
+              "Failed to parse quiz JSON:",
+              err,
+              "\nRaw:",
+              res.ai_quiz
+            );
+          }
+        } else {
+          parsedQuiz = res.ai_quiz;
+        }
+      }
+
+      setQuiz(parsedQuiz);
+      console.log("Received quiz data:", parsedQuiz);
+
       audio.play();
       setMessages((prev) =>
         prev.map((m) => (m.id === typingId ? { ...m, content: aiText } : m))
@@ -434,6 +535,7 @@ const TeachingChatUI: React.FC = () => {
         setMessages((prev) => [...prev, aiMsg]);
         const audio = new Audio(`data:audio/mpeg;base64,${data.ai_audio}`);
         audio.play();
+        console.log("Received audio response:", quiz);
       }
     } else {
       await recorder.startRecording();
@@ -1200,6 +1302,57 @@ const TeachingChatUI: React.FC = () => {
           #layout-root > div[style*="width"] { width: 100% !important; }
         }
       `}</style>
+
+      {showQuizModal && quiz && <EnhancedQuizModal quiz={quiz} />}
+
+      {/* {showQuizModal && quiz && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg w-96 max-w-full">
+            {!quizFinished ? (
+              <>
+                <h2 className="font-bold text-lg mb-4">
+                  Question {currentQuestionIndex + 1} of {quiz.quiz.length}
+                </h2>
+                <p className="mb-4">
+                  {quiz.quiz[currentQuestionIndex].question}
+                </p>
+                <ul>
+                  {quiz.quiz[currentQuestionIndex].options.map((opt, idx) => (
+                    <li key={idx} className="mb-2">
+                      <button
+                        className="w-full text-left p-2 border rounded hover:bg-gray-100"
+                        onClick={() => handleAnswer(opt)}
+                      >
+                        {opt}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            ) : (
+              <div>
+                <h2 className="font-bold text-lg mb-4">Quiz Completed!</h2>
+                <ul>
+                  {quiz.quiz.map((q, i) => (
+                    <li key={i} className="mb-2">
+                      <strong>{q.question}</strong>
+                      <p>Your answer: {userAnswers[i]}</p>
+                      <p>Correct answer: {q.correct_answer}</p>
+                      <p>Explanation: {q.explanation}</p>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                  onClick={() => setShowQuizModal(false)}
+                >
+                  Close
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      )} */}
     </div>
   );
 };
