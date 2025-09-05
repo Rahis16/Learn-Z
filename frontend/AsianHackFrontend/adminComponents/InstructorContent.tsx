@@ -225,7 +225,7 @@ export default function AdminInstructorsPage() {
         <KPI icon={<Users className="w-4 h-4" />} label="Instructors" value={String(totals.totalInstructors)} sub="Total creators" />
         <KPI icon={<Crown className="w-4 h-4" />} label="Courses" value={String(totals.totalCourses)} sub="Published by creators" />
         <KPI icon={<Users className="w-4 h-4" />} label="Learners" value={String(totals.totalLearners)} sub="Across all courses" />
-        <KPI icon={<DollarSign className="w-4 h-4" />} label="Instructor Share (40%)" value={`$${totals.instructorShare.toLocaleString()}`} sub="Payout owed" />
+        <KPI icon={<DollarSign className="w-4 h-4" />} label="Instructor Share (40%)" value={`Rs ${totals.instructorShare.toLocaleString()}`} sub="Payout owed" />
       </section>
 
       {/* Charts */}

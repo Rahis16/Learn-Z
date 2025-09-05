@@ -69,7 +69,7 @@ const DUMMY_COURSES: Course[] = [
     category: "Frontend",
     lessons: 28,
     learners: 1240,
-    price: 39,
+    price: 3999,
     updatedAt: "2025-09-01",
     status: "Published",
     progress: 100,
@@ -81,7 +81,7 @@ const DUMMY_COURSES: Course[] = [
     type: "Premium",
     level: "Intermediate",
     category: "Frontend",
-    lessons: 18,
+    lessons: 1800,
     learners: 980,
     price: 29,
     updatedAt: "2025-08-27",
@@ -95,7 +95,7 @@ const DUMMY_COURSES: Course[] = [
     type: "Freemium",
     level: "Beginner",
     category: "Programming",
-    lessons: 16,
+    lessons: 16000,
     learners: 5230,
     updatedAt: "2025-08-30",
     status: "Published",
@@ -108,7 +108,7 @@ const DUMMY_COURSES: Course[] = [
     type: "Freemium",
     level: "Beginner",
     category: "Database",
-    lessons: 14,
+    lessons: 14000,
     learners: 3320,
     updatedAt: "2025-08-18",
     status: "Published",
@@ -123,7 +123,7 @@ const DUMMY_COURSES: Course[] = [
     category: "Architecture",
     lessons: 22,
     learners: 410,
-    price: 49,
+    price: 4900,
     updatedAt: "2025-08-10",
     status: "Draft",
     progress: 70,
@@ -150,7 +150,7 @@ const DUMMY_COURSES: Course[] = [
     category: "Backend",
     lessons: 20,
     learners: 870,
-    price: 25,
+    price: 25000,
     updatedAt: "2025-08-05",
     status: "Published",
     progress: 100,
@@ -517,7 +517,7 @@ function HeroButton({ icon, children, onClick }: { icon: React.ReactNode; childr
 }
 
 function formatCurrency(v: number) {
-  return new Intl.NumberFormat(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(v);
+  return new Intl.NumberFormat(undefined, { style: "currency", currency: "NPR", maximumFractionDigits: 0 }).format(v);
 }
 
 /* -------------- Course Modal -------------- */

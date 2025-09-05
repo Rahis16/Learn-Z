@@ -27,9 +27,9 @@ const topStudents = [
 ];
 
 const topInstructors = [
-  { id: 1, name: "Prof. Daniel", courses: 12, students: 1200, earnings: "₹50K" },
-  { id: 2, name: "Dr. Emily", courses: 8, students: 950, earnings: "₹40K" },
-  { id: 3, name: "Mr. Frank", courses: 6, students: 700, earnings: "₹32K" },
+  { id: 1, name: "Prof. Daniel", courses: 12, students: 1200, earnings: "Rs 50K" },
+  { id: 2, name: "Dr. Emily", courses: 8, students: 950, earnings: "Rs 40K" },
+  { id: 3, name: "Mr. Frank", courses: 6, students: 700, earnings: "Rs 32K" },
 ];
 
 const pieData = [
