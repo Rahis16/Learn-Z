@@ -10,6 +10,8 @@ from rest_framework.decorators import (
     authentication_classes,
 )
 from rest_framework.permissions import AllowAny
+import json
+
 
 # from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
@@ -34,9 +36,39 @@ def transcribe_and_reply_2(request):
 
     GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent"
     GEMINI_API_KEY = "AIzaSyDwmmZ4jSBG4h_xh5vY20tYB3YfpYOPnOo"  # from Google AI Studio
+    GEMINI_API_KEY_QUIZ = (
+        "AIzaSyBQsQTb4eHot9Xm_BfXRZQfHJk1bKPEd9c"  # from Google AI Studio
+    )
 
     message = request.data.get("text", "")
     videoContext = request.data.get("videoContext", "")
+
+    quiz_assistant_system_prompt = f"""
+You are a structured quiz generator AI. 
+Your task is:
+1. Analyze the user message: {message}.
+2. If the user is explicitly asking for a quiz, then generate a quiz.
+3. If the user is NOT asking for a quiz, return exactly "None".
+
+When generating a quiz:
+- Base the quiz ONLY on the provided video context: [{videoContext}].
+- Create 5 questions, each with 4 options (A, B, C, D).
+- Include the correct answer and a short explanation for why it’s correct.
+- Output must be valid JSON in this format:
+
+{{
+  "quiz": [
+    {{
+      "question": "Question text",
+      "options": ["Option1", "Option2", "Option3", "Option4"],
+      "correct_answer": "Correct Option",
+      "explanation": "Short explanation of the correct answer"
+    }}
+  ]
+}}
+
+If the message is not about a quiz, output "None".
+"""
 
     system_prompt = """
                   You are Learn-Z, a friendly video-learning assistant which have the context of current active video played by the User.  
@@ -91,9 +123,7 @@ def transcribe_and_reply_2(request):
         {"role": msg.role, "content": msg.content} for msg in previous_messages
     ]
 
-    composed_system_prompts = (
-        f"[your role]: [{system_prompt}] [current video context]: [ {videoContext} ] with [conversation history]: [{conversation_history}]"
-    )
+    composed_system_prompts = f"[your role]: [{system_prompt}] [current video context]: [ {videoContext} ] with [conversation history]: [{conversation_history}]"
 
     # Build Gemini history
     gemini_contents = []
@@ -116,8 +146,15 @@ def transcribe_and_reply_2(request):
     # Add current message
     gemini_contents.append({"role": "user", "parts": [{"text": message}]})
 
+    gemini_quiz_contents = [
+        {"role": "user", "parts": [{"text": f"{quiz_assistant_system_prompt}"}]}
+    ]
+
     # Call Gemini
     gemini_payload = {"contents": gemini_contents}
+
+    # for quiz-payload
+    gemini_quiz_payload = {"contents": gemini_quiz_contents}
 
     gemini_res = requests.post(
         f"{GEMINI_API_URL}?key={GEMINI_API_KEY}",
@@ -125,15 +162,45 @@ def transcribe_and_reply_2(request):
         json=gemini_payload,
     )
 
+    # for quiz
+    gemini_res_quiz = requests.post(
+        f"{GEMINI_API_URL}?key={GEMINI_API_KEY_QUIZ}",
+        headers={"Content-Type": "application/json"},
+        json=gemini_quiz_payload,
+    )
+
     if gemini_res.status_code != 200:
         return Response(
             {"error": "Gemini API failed", "details": gemini_res.text}, status=500
+        )
+
+    #  for quiz
+    if gemini_res_quiz.status_code != 200:
+        return Response(
+            {"error": "Gemini API failed", "details": gemini_res_quiz.text}, status=500
         )
 
     gemini_data = gemini_res.json()
     if gemini_data:
         print(gemini_data)
     ai_reply = gemini_data["candidates"][0]["content"]["parts"][0]["text"]
+
+    # for quiz
+    gemini_data_quiz = gemini_res_quiz.json()
+    if gemini_data_quiz:
+        print(gemini_data_quiz)
+
+    ai_reply_quiz = gemini_data_quiz["candidates"][0]["content"]["parts"][0]["text"]
+    print("AI Quiz Reply:", ai_reply_quiz)
+
+    # quiz_json = None
+    # if ai_reply_quiz.strip() != "None":
+    #     try:
+    #         quiz_parsed = json.loads(ai_reply_quiz)
+    #         quiz_json = quiz_parsed.get("quiz", None)
+    #     except Exception as e:
+    #         print("Failed to parse quiz JSON:", e)
+    #         quiz_json = None
 
     # Save assistant reply
     ChatMessageAi.objects.create(role="assistant", content=ai_reply)
@@ -156,5 +223,10 @@ def transcribe_and_reply_2(request):
     )
 
     return Response(
-        {"ai_text": ai_reply, "ai_audio": audio_base64, "ai_reasoning": None}
+        {
+            "ai_text": ai_reply,
+            "ai_audio": audio_base64,
+            "ai_reasoning": None,
+            "ai_quiz": ai_reply_quiz,
+        }
     )
