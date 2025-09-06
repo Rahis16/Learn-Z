@@ -17,7 +17,7 @@ interface EnhancedQuizModalProps {
   handleClose: () => void;
 }
 
-const EnhancedQuizModal = ({ quiz, handleClose }: EnhancedQuizModalProps) => {
+const EnhancedQuizModal = ({ quiz, handleClose }: EnhancedQuizModalProps) => { 
   // Sample quiz data based on your structure
   //   const sampleQuiz: Quiz = {
   //     quiz: [
