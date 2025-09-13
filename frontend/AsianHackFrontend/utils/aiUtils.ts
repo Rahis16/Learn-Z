@@ -6,15 +6,18 @@
  * @param text Optional typed text.
  * @param apiUrl Backend API endpoint.
  * @param videoContext Video context information.
+ * @param videoId Video ID.
  *
  */
+import { axiosWithCsrf } from "@/lib/axiosWithCsrf";
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const DEFAULT_API_URL = `${BASE_URL}/api/transcribe-and-reply-2/`;
 export async function sendToBackend(
   audioBlob?: Blob,
   text?: string,
   apiUrl: string = DEFAULT_API_URL,
-  videoContext?: any
+  videoContext?: any,
+  videoId?: number
 ) {
   const formData = new FormData();
 
@@ -28,25 +31,40 @@ export async function sendToBackend(
   if (videoContext) {
     formData.append("videoContext", videoContext);
   }
+  
+  if (videoId) {
+    formData.append("videoId", videoId.toString());
+  }
 
-  try {
-    const response = await fetch(apiUrl, {
-      method: "POST",
-      body: formData,
-      // credentials: "include", // sends cookies for cross-origin requests
+  // try {
+  //   const response = await fetch(apiUrl, {
+  //     method: "POST",
+  //     body: formData,
+  //   });
+
+  //   if (!response.ok) {
+  //     throw new Error(`Backend returned ${response.status}`);
+  //   }
+
+  //   return await response.json();
+  // } catch (err) {
+  //   console.error("Backend request failed:", err);
+  //   throw err;
+  // }
+  try{
+    const response = await axiosWithCsrf.post("/api/transcribe-and-reply-2/", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      withCredentials: true, // sends cookies for cross-origin requests
     });
-
-    if (!response.ok) {
-      throw new Error(`Backend returned ${response.status}`);
-    }
-
-    return await response.json();
-  } catch (err) {
+    return response.data; 
+  }
+  catch (err) {
     console.error("Backend request failed:", err);
     throw err;
   }
 }
-
 /**
  * Speaks the given text aloud in Hindi (if available) or default language.
  * @param text Text to speak.

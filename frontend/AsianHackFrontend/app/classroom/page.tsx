@@ -245,6 +245,7 @@ const TeachingChatUI: React.FC = () => {
     [classroomItems, activeVideo]
   );
 
+
   // layout toggles
   const defaultLayout = {
     showLeft: true,
@@ -446,12 +447,15 @@ const TeachingChatUI: React.FC = () => {
 
     const videoContext = activeVideo?.notes?.trim() || "";
 
+    const videoId = activeItem?.id || undefined;
+
     try {
       const res = await sendToBackend(
         undefined,
         composed,
         undefined,
-        videoContext
+        videoContext,
+        videoId
       );
       const aiText = res.ai_text || "Sorry, I couldn't process that.";
       const audio = new Audio(`data:audio/mpeg;base64,${res.ai_audio}`);

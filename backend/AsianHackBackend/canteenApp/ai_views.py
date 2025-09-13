@@ -1,16 +1,14 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.core.files.storage import default_storage
 import base64
 import requests
-from .models import ChatMessageAi
+from .models import ChatMessageUserAI, ClassroomItem
 from rest_framework.decorators import (
     api_view,
     permission_classes,
-    authentication_classes,
 )
-from rest_framework.permissions import AllowAny
 import json
+from rest_framework.permissions import IsAuthenticated
 
 
 # from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -28,11 +26,11 @@ HF_API_KEY = "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"  # Hugging Face token yaha 
 ELEVENLABS_API_KEY = "sk_d2045f1e1719e9bc4d97c842af2287fe0a1c4aa499312738"
 ELEVENLABS_VOICE_ID = "jqcCZkN6Knx8BJ5TBdYR"
 
-
 @api_view(["POST"])
-@permission_classes([AllowAny])
-@authentication_classes([])  # disables any authentication classes
+@permission_classes([IsAuthenticated])
 def transcribe_and_reply_2(request):
+    print("User:", request.user, "Authenticated:", request.user.is_authenticated)
+
 
     GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent"
     GEMINI_API_KEY = "AIzaSyDwmmZ4jSBG4h_xh5vY20tYB3YfpYOPnOo"  # from Google AI Studio
@@ -42,13 +40,16 @@ def transcribe_and_reply_2(request):
 
     message = request.data.get("text", "")
     videoContext = request.data.get("videoContext", "")
+    videoId = request.data.get("videoId", "")
+    print(videoId)
 
     quiz_assistant_system_prompt = f"""
 You are a structured quiz generator AI. 
 Your task is:
 1. Analyze the user message: {message}.
-2. If the user is explicitly asking for a quiz, then generate a quiz.
+2. If the user is explicitly asking for a quiz, then generate a quiz [! Don't generate the quiz if the user just ask any question].
 3. If the user is NOT asking for a quiz, return exactly "None".
+4. Donot gnerate quiz until the user mention the "quiz" word or any word related to it.
 
 When generating a quiz:
 - Base the quiz ONLY on the provided video context: [{videoContext}].
@@ -76,6 +77,7 @@ If the message is not about a quiz, output "None".
                   - Always answer short, clear, and in a warm, family-like tone.  
                   - Focus all answers around the video context, like notes, summaries, timestamps, projects, or explanations learners see in the video.  
                   - Never go off-topic; always bring the answer back to the video.  
+                  - we have also implemented structured quiz simulation so if user asks for a quiz then reply user that the quiz is ready and to answer the questions wisely in a family like tone.
                   
                   If learners need more help, politely ask:  
                   "Would you like me to give more details or examples from the video context?"  
@@ -111,12 +113,17 @@ If the message is not about a quiz, output "None".
     # user_text = result["text"]
 
     # print(f"User text: {user_text}")
+    
+    #get clasroomItem
+    currentItem = ClassroomItem.objects.filter(id=videoId).first()
+    print(f"currentItem : {currentItem}")
+        
 
     # Save user message in DB
-    ChatMessageAi.objects.create(role="user", content=message)
+    ChatMessageUserAI.objects.create(role="user", content=message, user=request.user, item=currentItem)
 
     # Fetch last 5 messages from DB (oldest first)
-    previous_messages = ChatMessageAi.objects.order_by("-created_at")
+    previous_messages = ChatMessageUserAI.objects.filter(user=request.user, item=currentItem).order_by("-created_at")
     previous_messages = list(reversed(previous_messages))
 
     conversation_history = [
@@ -203,7 +210,7 @@ If the message is not about a quiz, output "None".
     #         quiz_json = None
 
     # Save assistant reply
-    ChatMessageAi.objects.create(role="assistant", content=ai_reply)
+    ChatMessageUserAI.objects.create(role="assistant", content=ai_reply, user=request.user, item=currentItem)
 
     # ElevenLabs TTS
     tts_payload = {
@@ -230,3 +237,21 @@ If the message is not about a quiz, output "None".
             "ai_quiz": ai_reply_quiz,
         }
     )
+
+
+
+
+# def user_ai_chat_per_video(request, id):
+#     currentItem = ClassroomItem.objects.filter(id=id).first()
+#     chats = ChatMessageUserAI.objects.filter(user=request.user, item=currentItem).all()
+    
+#     for chat_chunk in chats:
+#         if chat_chunk.role == "user":
+#             print(chat_chunk.content)
+            
+#         if chat_chunk.role == "assistant":
+#             print(chat_chunk.content)
+                
+#     return Response({"chat": chat_chunk})                  
+            
+    

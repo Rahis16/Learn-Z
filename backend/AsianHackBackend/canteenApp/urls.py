@@ -53,6 +53,7 @@ urlpatterns = [
         transcribe_and_reply_2,
         name="transcribe-and-reply_2",
     ),
+    # path("ai-chat/<int:id>/", user_ai_chat_per_video, name="user_ai_chat"),
     # MVP urls for app logics -----------------------------------------------------------
     path("my-profile/", UserProfileDetailUpdateView.as_view(), name="my-profile"),
     path("update-profile/", views.update_profile, name="update-profile"),

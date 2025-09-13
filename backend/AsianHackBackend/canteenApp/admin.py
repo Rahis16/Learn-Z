@@ -103,9 +103,9 @@ class ChatMessageAdmin(admin.ModelAdmin):
 
 
 # Register your models here.
-@admin.register(ChatMessageAi)
-class ChatMessageAiAdmin(admin.ModelAdmin):
-    list_display = ("role", "content", "created_at")
+@admin.register(ChatMessageUserAI)
+class ChatMessageUserAiAdmin(admin.ModelAdmin):
+    list_display = ("user", "role", "item", "created_at")
     list_filter = ("role", "created_at")
     search_fields = ("content",)
     ordering = ("-created_at",)

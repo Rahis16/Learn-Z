@@ -359,14 +359,6 @@ class ChatMessage(models.Model):
         return f"Private Chat - {self.sender.username} → {self.receiver.username}"
 
 
-class ChatMessageAi(models.Model):
-    role = models.CharField(max_length=20)  # 'system', 'user', 'assistant'
-    content = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.role}: {self.content[:50]}"
-
 
 
 # classroom models
@@ -420,6 +412,17 @@ class ClassroomItem(models.Model):
         return f"{self.classroom} → {self.video}"
 
 
+class ChatMessageUserAI(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="Aichat")
+    item = models.ForeignKey(ClassroomItem, on_delete=models.CASCADE, related_name="video_chats")
+    role = models.CharField(max_length=20)  # 'system', 'user', 'assistant'
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.role}: {self.content[:50]}"
+    
+    
 class VideoContext(models.Model):
     """
     One context per video (time-coded outline).
