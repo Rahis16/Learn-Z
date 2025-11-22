@@ -33,9 +33,9 @@ def transcribe_and_reply_2(request):
 
 
     GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent"
-    GEMINI_API_KEY = "AIzaSyDwmmZ4jSBG4h_xh5vY20tYB3YfpYOPnOo"  # from Google AI Studio
+    GEMINI_API_KEY = "AIzaSyDqybw53A-uXTS7mQHaMjw5u4l1s5XiEgg"  # from Google AI Studio
     GEMINI_API_KEY_QUIZ = (
-        "AIzaSyBQsQTb4eHot9Xm_BfXRZQfHJk1bKPEd9c"  # from Google AI Studio
+        "AIzaSyB2loYlCwoVi5BHCqKAjDOFwmSgkPyjQgU"  # from Google AI Studio
     )
 
     message = request.data.get("text", "")
@@ -77,8 +77,8 @@ If the message is not about a quiz, output "None".
                   - Always answer short, clear, and in a warm, family-like tone.  
                   - Focus all answers around the video context, like notes, summaries, timestamps, projects, or explanations learners see in the video.  
                   - Never go off-topic; always bring the answer back to the video.  
-                  - we have also implemented structured quiz simulation so if user asks for a quiz then reply user that the quiz is ready and to answer the questions wisely in a family like tone.
-                  
+                  - we have also implemented structured quiz simulation so if user asks for a quiz then reply user that the quiz is ready [but don't generate quiz because another model is already generating that].
+                
                   If learners need more help, politely ask:  
                   "Would you like me to give more details or examples from the video context?"  
                   

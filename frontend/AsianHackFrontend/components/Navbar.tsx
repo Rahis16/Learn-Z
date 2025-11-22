@@ -96,12 +96,12 @@ export default function Navbar() {
               className="w-full rounded-2xl justify-around bg-white/60 dark:bg-zinc-900/60 border border-white/30 dark:border-white/10 shadow-sm px-1 py-1 flex items-center gap-1"
             >
               <button
-                onClick={() => router.push("/community")}
+                onClick={() => router.push("/leaderboard")}
                 className="group cursor-pointer inline-flex items-center gap-2 px-3 py-2 rounded-xl hover:bg-white/80 dark:hover:bg-zinc-900/80 transition"
-                title="Community"
+                title="Leaderboard"
               >
                 <Users className="w-4 h-4 text-zinc-500 group-hover:text-zinc-700 dark:text-zinc-400 dark:group-hover:text-zinc-200" />
-                <span className="text-sm">Community</span>
+                <span className="text-sm">Leaderboard</span>
               </button>
 
               <button

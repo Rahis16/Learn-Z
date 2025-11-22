@@ -14,12 +14,13 @@ import {
   BookOpen,
   MessagesSquare,
   FolderOpen,
+  BadgeCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 type Plan = {
-  id: "starter" | "pro" | "eager";
+  id: "free" | "starter" | "pro" | "eager";
   name: string;
   price: number; // Rs
   dailyTokens: number;
@@ -32,9 +33,18 @@ type Plan = {
 
 const PLANS: Plan[] = [
   {
+    id: "free",
+    name: "Free",
+    price: 0,
+    dailyTokens: 5_000,
+    monthlyTokens: 1_50_000,
+    courses: "5 free video courses",
+    contextsDocs: "Docs included",
+  },
+  {
     id: "starter",
     name: "Starter",
-    price: 399,
+    price: 499,
     dailyTokens: 100_000,
     monthlyTokens: 3_000_000,
     courses: "100 free video courses",
@@ -43,7 +53,7 @@ const PLANS: Plan[] = [
   {
     id: "pro",
     name: "Pro",
-    price: 699,
+    price: 999,
     dailyTokens: 200_000,
     monthlyTokens: 6_000_000,
     courses: "200 free video courses",
@@ -54,7 +64,7 @@ const PLANS: Plan[] = [
   {
     id: "eager",
     name: "Eager to Learn",
-    price: 1299,
+    price: 1599,
     dailyTokens: 500_000,
     monthlyTokens: 15_000_000,
     courses: "Unlimited video courses",
@@ -126,7 +136,7 @@ export default function PricingPage() {
             </div>
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5 text-emerald-600" />
-              <span className="text-sm text-slate-700">Secure payments • Cancel anytime</span>
+              <span className="text-sm text-slate-700">Secure payments</span>
             </div>
           </div>
         </div>
@@ -157,6 +167,7 @@ export default function PricingPage() {
 
                 <div className={`flex ${plan.badge === "Most Popular" ? "mt-2" : ""} items-center justify-between`}>
                   <div className="flex items-center gap-2">
+                    {plan.id === "free" && <BadgeCheck className="h-5 w-5 text-indigo-600" />}
                     {plan.id === "starter" && <Sparkles className="h-5 w-5 text-indigo-600" />}
                     {plan.id === "pro" && <Crown className="h-5 w-5 text-amber-500" />}
                     {plan.id === "eager" && <Rocket className="h-5 w-5 text-violet-600" />}
@@ -223,7 +234,7 @@ export default function PricingPage() {
 
                 <p className="mt-2 text-[11px] text-slate-600 flex items-center gap-1">
                   <Info className="h-3.5 w-3.5" />
-                  Taxes may apply • Cancel anytime
+                  Taxes may apply
                 </p>
               </motion.div>
             );

@@ -25,7 +25,7 @@ interface StudentProfile {
   id: number;
   username: string;
   photo: string;
-  semester: number;
+  rank: number;
   faculty: string;
   year?: number;
   background: string;
@@ -159,8 +159,8 @@ export default function ProfilePage() {
         {/* Quick Stats */}
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[{
-            label: "Semester",
-            value: String(profile?.semester ?? "N/A"),
+            label: "Rank",
+            value: String(profile?.rank ?? "#1"),
           },
           { label: "Courses Purchased", value: String(purchasedCount) },
           { label: "Study (30d)", value: `${studiedHours}h` }].map((s) => (
