@@ -158,7 +158,7 @@ export default function ProfilePage() {
 
         {/* Quick Stats */}
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {[{
+          {[{ 
             label: "Rank",
             value: String(profile?.rank ?? "#1"),
           },
