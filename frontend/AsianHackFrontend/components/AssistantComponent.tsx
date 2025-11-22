@@ -12,7 +12,7 @@ const Assistant: React.FC<{ isActive: boolean; onFinish?: () => void }> = ({
   const audioRef = useRef<HTMLAudioElement>(null);
   const recognitionRef = useRef<any>(null);
   const isListeningRef = useRef(false);
-  const preventRestartRef = useRef(false);
+  const preventRestartRef = useRef(false); 
 
   const [isListening, setIsListening] = useState(false);
   const [assistantPos, setAssistantPos] = useState<
